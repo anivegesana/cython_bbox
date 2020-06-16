@@ -7,8 +7,16 @@
 
 from __future__ import print_function
 
-from Cython.Build import cythonize
-from Cython.Distutils import build_ext
+from setuptools import dist
+dist.Distribution().fetch_build_eggs(['cython', 'numpy'])
+
+try:
+    from Cython.Build import cythonize
+except ImportError:
+    # create closure for deferred import
+    def cythonize (*args, ** kwargs ):
+        from Cython.Build import cythonize
+        return cythonize(*args, ** kwargs)
 from setuptools import Extension
 from setuptools import setup
 
@@ -42,7 +50,8 @@ setup(
     long_description_content_type="text/markdown",
     author = 'Samson Wang',
     author_email = 'samson.c.wang@gmail.com',
-    url = 'https://github.com/samson-wang/cython_bbox.git', 
-    keywords = ['cython_bbox']
+    url = 'https://github.com/samson-wang/cython_bbox.git',
+    keywords = ['cython_bbox'],
+    setup_requires = ['setuptools>=18.0', 'cython'],
+    install_requires = ['numpy']
 )
-
